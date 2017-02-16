@@ -5,9 +5,15 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-
-namespace TEST1 {
-    public class Robot {
+namespace RobotDLL
+{
+    public struct _Point {
+        public double X;
+        public double Y;
+        public double Z;
+    }
+    public class Robot
+    {
 
         public int Port { get; set; }
         public string Ipoc { get; set; }
@@ -46,14 +52,12 @@ namespace TEST1 {
             CurC = 0;
             isCur = false;
 
-            RX = 864.8;
-            RY = 89.3;
-            RZ = 958.1;
-            RA = 7.6;
-            RB = -0.6;
-            RC = 1.6;
-                 
-
+            //RX = 864.8;
+            //RY = 89.3;
+            //RZ = 958.1;
+            //RA = 7.6;
+            //RB = -0.6;
+            //RC = 1.6;
 
             anyfunction();
         }
@@ -111,7 +115,7 @@ namespace TEST1 {
                                 Y = CurY,
                                 Z = CurZ
                             };
-                            Currection.WriteToFile("ipoc.txt", p, Ipoc);
+                            //Currection.WriteToFile("ipoc.txt", p, Ipoc);
                             CurX = 0;
                             CurY = 0;
                             CurZ = 0;
@@ -120,11 +124,8 @@ namespace TEST1 {
                             CurC = 0;
                             isCur = false;
                         }
-                        
 
-
-
-
+                        #region
                         //if (isCur) {
                         //    CurX = MyXML.GetValues(strReceive, "X");
                         //    CurY = MyXML.GetValues(strReceive, "Y");
@@ -136,8 +137,8 @@ namespace TEST1 {
                         //    isCur = false;
                         //} 
 
+                        //----------------------
 
-                        #region
                         /*
                         CurX = RX;
                         CurY = RY;
@@ -155,8 +156,6 @@ namespace TEST1 {
                         Currection.WriteToFile("ipoc.txt", p, Ipoc);
                         */
                         #endregion
-
-
 
                         Send_data = strSend;
 

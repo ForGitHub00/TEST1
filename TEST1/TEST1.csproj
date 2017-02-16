@@ -87,11 +87,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Classes\Calculate.cs" />
-    <Compile Include="Classes\CLLTI.cs" />
     <Compile Include="Classes\Currection.cs" />
-    <Compile Include="Classes\Laser.cs" />
     <Compile Include="Classes\MyXML.cs" />
-    <Compile Include="Classes\Robot.cs" />
     <Compile Include="Classes\Transform.cs" />
     <Compile Include="Classes\Viewer.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -132,6 +129,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LaserDll\LaserDll.csproj">
+      <Project>{72d9477e-821d-4847-a856-65018b591aa0}</Project>
+      <Name>LaserDll</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RobotDLL\RobotDLL.csproj">
+      <Project>{b61767a7-5850-4df9-9cf9-2f50222f57ab}</Project>
+      <Name>RobotDLL</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

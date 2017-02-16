@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LaserDll;
+using RobotDLL;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -305,7 +307,7 @@ namespace TEST1 {
                                 _INDX = index;
 
 
-                                double step = 0.3;
+                                double step = 110.3;
                                 if (Math.Abs(curY) > step) {
                                     if (curY * -1 < 0) {
                                         curY = step;
@@ -368,22 +370,22 @@ namespace TEST1 {
         public void ShowInfo() {
             while (true) {
                 Dispatcher.Invoke(() => {
-                    //double[] X;// = new double[1];
-                    //double[] Z;// = new double[1];                    
-                    //Laser.GetProfile(out X, out Z);
-                    //List<MyPoint> data = Calculate.ZeroZ(X, Z);
-                    //_V.SetData(data);
-                    //_V.ReDraw();
-                    //MyPoint p = new MyPoint() { X = 0, Z = 0 };
+                    double[] X;// = new double[1];
+                    double[] Z;// = new double[1];                    
+                    Laser.GetProfile(out X, out Z);
+                    List<MyPoint> data = Calculate.ZeroZ(X, Z);
+                    _V.SetData(data);
+                    _V.ReDraw();
+                    MyPoint p = new MyPoint() { X = 0, Z = 0 };
 
-                    //if (data.Count != 0) {
-                    //    p = Calculate.FindPointWithAngle(data, 10, 5);
-                    //    //MyPoint p2 = Calculate.FindPointWithAngleRight(data, 10, 5);
-                    //    //_V.DrawPoint(p2, new SolidColorBrush(Colors.Black));
-                    //}
-                    //_V.DrawPoint(p);
+                    if (data.Count != 0) {
+                        p = Calculate.FindPointWithAngle(data, 10, 5);
+                        //MyPoint p2 = Calculate.FindPointWithAngleRight(data, 10, 5);
+                        //_V.DrawPoint(p2, new SolidColorBrush(Colors.Black));
+                    }
+                    _V.DrawPoint(p);
 
-                    
+
                     tb_ReciveData.Text = _R.Recive_data;
                     tb_SendData.Text = _R.Send_data;
 
@@ -435,7 +437,7 @@ namespace TEST1 {
                     //_V.DrawPoint(p4, new SolidColorBrush(Colors.Pink));
                     #endregion
                 });
-                Thread.Sleep(12);
+                Thread.Sleep(100);
             }
         }
         //запись маршрута

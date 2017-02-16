@@ -5,6 +5,10 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TEST1", "TEST1\TEST1.csproj", "{14C96220-1EF6-4915-8A03-A3387FA50CE7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LaserDll", "LaserDll\LaserDll.csproj", "{72D9477E-821D-4847-A856-65018B591AA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobotDLL", "RobotDLL\RobotDLL.csproj", "{B61767A7-5850-4DF9-9CF9-2F50222F57AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,22 @@ Global
 		{14C96220-1EF6-4915-8A03-A3387FA50CE7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{14C96220-1EF6-4915-8A03-A3387FA50CE7}.Release|x64.ActiveCfg = Release|x64
 		{14C96220-1EF6-4915-8A03-A3387FA50CE7}.Release|x64.Build.0 = Release|x64
+		{72D9477E-821D-4847-A856-65018B591AA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72D9477E-821D-4847-A856-65018B591AA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72D9477E-821D-4847-A856-65018B591AA0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{72D9477E-821D-4847-A856-65018B591AA0}.Debug|x64.Build.0 = Debug|Any CPU
+		{72D9477E-821D-4847-A856-65018B591AA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72D9477E-821D-4847-A856-65018B591AA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72D9477E-821D-4847-A856-65018B591AA0}.Release|x64.ActiveCfg = Release|Any CPU
+		{72D9477E-821D-4847-A856-65018B591AA0}.Release|x64.Build.0 = Release|Any CPU
+		{B61767A7-5850-4DF9-9CF9-2F50222F57AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B61767A7-5850-4DF9-9CF9-2F50222F57AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B61767A7-5850-4DF9-9CF9-2F50222F57AB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B61767A7-5850-4DF9-9CF9-2F50222F57AB}.Debug|x64.Build.0 = Debug|Any CPU
+		{B61767A7-5850-4DF9-9CF9-2F50222F57AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B61767A7-5850-4DF9-9CF9-2F50222F57AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B61767A7-5850-4DF9-9CF9-2F50222F57AB}.Release|x64.ActiveCfg = Release|Any CPU
+		{B61767A7-5850-4DF9-9CF9-2F50222F57AB}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

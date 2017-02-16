@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TEST1 {
+namespace LaserDll {
     public class CLLTI {
         //Sample interface class with all needed functions for the example
         //Note not all functions of the LLT.dll are in this interface.
@@ -213,4 +213,3 @@ namespace TEST1 {
         }
     }
 }
-
