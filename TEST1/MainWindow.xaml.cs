@@ -52,13 +52,13 @@ namespace TEST1 {
 
 
 
-            Thread thrd = new Thread(new ThreadStart(ShowInfo));
-            thrd.Start();
+            //Thread thrd = new Thread(new ThreadStart(ShowInfo));
+            //thrd.Start();
 
-            //Thread thrd_map = new Thread(new ThreadStart(ShowInfo3));
-            //thrd_map.Start();
-            //Thread thrd_cur = new Thread(new ThreadStart(DoCur2));
-            //thrd_cur.Start();
+            Thread thrd_map = new Thread(new ThreadStart(ShowInfo3));
+            thrd_map.Start();
+            Thread thrd_cur = new Thread(new ThreadStart(DoCur4));
+            thrd_cur.Start();
 
 
             #region
@@ -305,7 +305,7 @@ namespace TEST1 {
                                 _INDX = index;
 
 
-                                double step = 0.35;
+                                double step = 0.3;
                                 if (Math.Abs(curY) > step) {
                                     if (curY * -1 < 0) {
                                         curY = step;
@@ -497,6 +497,9 @@ namespace TEST1 {
         //относительная
        
         public void ShowInfo3() {
+
+            _Point tempPoint = new _Point();
+            bool yes = false;
             while (true) {
 
 
@@ -529,30 +532,54 @@ namespace TEST1 {
 
                     _Point pTrans = Transform.Trans(_R.RX, _R.RY, _R.RZ, _R.RA, _R.RB, _R.RC, 76.97, p.X + 7.51, p.Z - 350 - 5.87);
 
+                    //if (pTrans.X != 0) {
+                    //    if (CurData.Count == 0) {
+                    //        CurData.Add(new _Point() {
+                    //            X = pTrans.X,
+                    //            Y = pTrans.Y,
+                    //            Z = pTrans.Z
+                    //        });
+                    //        Dispatcher.Invoke(() => map.LPoint(pTrans.X, pTrans.Y));
+                    //    } else {                          
+                    //        double yDif = 2;  // разница по игреку меду соседними точками при записи траэктории
+                    //        if (Math.Abs(pTrans.Y - CurData[CurData.Count - 1].Y) < yDif) {
+                    //            //Console.WriteLine($"{Math.Abs(pTrans.Y - CurData[CurData.Count - 1].Y)}");
+                    //            CurData.Add(new _Point() {
+                    //                X = pTrans.X,
+                    //                Y = pTrans.Y,
+                    //                Z = pTrans.Z
+                    //            });
+                    //            Dispatcher.Invoke(() => map.LPoint(pTrans.X, pTrans.Y));
+                    //        }
+                    //    }
+
+
                     if (pTrans.X != 0) {
-                        if (CurData.Count == 0) {
-                            CurData.Add(new _Point() {
+                        if (!yes) {
+                            tempPoint = new _Point() {
                                 X = pTrans.X,
                                 Y = pTrans.Y,
                                 Z = pTrans.Z
-                            });
-                            Dispatcher.Invoke(() => map.LPoint(pTrans.X, pTrans.Y));
-                        } else {                          
-                            double yDif = 2;  // разница по игреку меду соседними точками при записи траэктории
-                            if (Math.Abs(pTrans.Y - CurData[CurData.Count - 1].Y) < yDif) {
+                            };
+                            yes = !yes;
+                        } else {
+                            double yDif = 5;  // разница по игреку меду соседними точками при записи траэктории
+                            if (Math.Abs(pTrans.Y - tempPoint.Y) < yDif && Math.Abs(pTrans.X - tempPoint.X) >= 1) {
                                 //Console.WriteLine($"{Math.Abs(pTrans.Y - CurData[CurData.Count - 1].Y)}");
-                                CurData.Add(new _Point() {
-                                    X = pTrans.X,
-                                    Y = pTrans.Y,
-                                    Z = pTrans.Z
-                                });
-                                Dispatcher.Invoke(() => map.LPoint(pTrans.X, pTrans.Y));
+                                _Point temp = Calculate.CalcPoint(tempPoint, pTrans);
+                                CurData.Add(temp);
+                                Dispatcher.Invoke(() => map.LPoint(temp.X, temp.Y));
+                                tempPoint = pTrans;
+                                Console.WriteLine($"X = {temp.X}  Y = {temp.Y}  Z = {temp.Z}  ");
                             }
                         }
 
                         //Dispatcher.Invoke(() => map.LPoint(pTrans.X, pTrans.Y));
 
                         CurData.OrderBy(x => x.X);
+                        if (CurData.Count > 2) {
+                            CurData = Calculate.UsredMap(CurData);
+                        }
                     }
                     #region
                     //double rx = MyXML.GetValues(_R.Recive_data, "X");

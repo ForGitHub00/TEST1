@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 //nhgkkjgkkghgkhhgkh
 //njkbkhbjkKKJ
-//LLLL
+//L
 namespace TEST1 {
     public static class Calculate {
 
@@ -358,5 +358,39 @@ namespace TEST1 {
 
             return new MyPoint() { X = (data[leftIndex].X + data[rightIndex].X) / 2, Z = (data[leftIndex].Z + data[rightIndex].Z) / 2 };
         }
+
+        public static _Point CalcPoint(_Point p1, _Point p2) {
+            double x1 = Math.Min(p1.X, p2.X);
+            double x2 = Math.Max(p1.X, p2.X);
+            double x = Convert.ToInt32(x1) - 1;
+
+            double y1 = p1.X == x1 ? p1.Y : p2.Y;
+            double y2 = p1.X == x2 ? p1.Y : p2.Y;
+
+            double yRes = (((x-x1)*(y2-y1))/(x2 - x1)) + y1;
+
+            double z1 = p1.X == x1 ? p1.Z : p2.Z;
+            double z2 = p1.X == x2 ? p1.Z : p2.Z;
+
+            double zRes = (((x - x1) * (z2 - z1)) / (x2 - x1)) + z1;
+
+
+            return new _Point() { X = x, Y = yRes, Z = zRes };
+        }
+
+        public static List<_Point> UsredMap(List<_Point> data) {
+            List<_Point> res = new List<_Point>();
+            res.Add(data[0]);
+            for (int i = 1; i < data.Count - 1; i++) {
+                res.Add(new _Point() {
+                    X = data[i].X,
+                    Y = (data[i - 1].Y + data[i + 1].Y) / 2,
+                    Z = (data[i - 1].Z + data[i + 1].Z) / 2,
+                });
+            }
+            res.Add(data[data.Count - 1]);
+            return res;
+        }
+
     }
 }
