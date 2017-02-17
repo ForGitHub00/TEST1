@@ -24,9 +24,9 @@ namespace TEST1 {
             InitializeComponent();
             main();
             //Testinng();
-            map.Show();
-            //map.RPoint(1000, 50);
 
+            map.Show();
+          
             data = new List<MyPoint>();
         }
         public Viewer _V;
@@ -34,7 +34,7 @@ namespace TEST1 {
         List<_Point> CurData;
         List<MyPoint> data;
 
-        MapWindow map = new MapWindow();
+        public MapWindow map = new MapWindow();
 
         public void main() {
             _V = new Viewer(this);
@@ -45,7 +45,8 @@ namespace TEST1 {
             //CurData.OrderBy(x => x.X);
 
 
-            _R = new Robot(6008);
+            _R = new Robot(6008, this);
+            map.Show();
              _R.Start();
             _INDX = -1;
             prevIpoc = "0";
@@ -57,8 +58,12 @@ namespace TEST1 {
 
             Thread thrd_map = new Thread(new ThreadStart(ShowInfo3));
             thrd_map.Start();
-            Thread thrd_cur = new Thread(new ThreadStart(DoCur4));
-            thrd_cur.Start();
+
+            //Thread thrd_cur = new Thread(new ThreadStart(DoCur4));
+            //thrd_cur.Start();
+
+            //Thread thrd_test = new Thread(new ThreadStart(Testinng));
+            //thrd_test.Start();
 
 
             #region
@@ -286,26 +291,15 @@ namespace TEST1 {
 
 
                     if (CurData.Count > 0) {
-
-                     
-
-
-                        while (index < CurData.Count && rx > CurData[index].X) {
+                         while (index < CurData.Count && rx > CurData[index].X) {
                             index++;
                         }
-
-
-                        //
-                        //
-
                         if (index < CurData.Count) {
                             if (index != _INDX) {
                                 curY = CurData[index].Y - ry;
                                 curZ = CurData[index].Z - rz;
                                 _INDX = index;
-
-
-                                double step = 0.3;
+                                double step = 25;
                                 if (Math.Abs(curY) > step) {
                                     if (curY * -1 < 0) {
                                         curY = step;
@@ -328,8 +322,9 @@ namespace TEST1 {
 
                     _R.CurY = curY;
                     _R.CurZ = curZ;
-                    // _R.CurX = 0.2;                  
                     _R.isCur = true;
+                   // _R.CurX = 0.2;                  
+                   
                 }
             }
 
@@ -337,28 +332,38 @@ namespace TEST1 {
 
 
         public void Testinng() {
-            double curY = 0.2;
-            double curZ = 0.4;
+            double prevX = 0;
+            double x = 0;
+            double prevY = 0;
+            double y = 0;
+            double prevZ = 0;
+            double z = 0;
+            long prevIpoc = 0;
+            long ipoc;
 
-            double step = 0.3;
 
-            if (Math.Abs(curY) > step) {
-                if (curY * -1 < 0) {
-                    curY = step;
-                } else {
-                    curY = -step;
+            while (true) {
+                if (_R.Recive_data != "" && _R.Recive_data != null) {
+                    if (prevIpoc == 0) {
+                        prevIpoc = Convert.ToInt64(_R.Ipoc);
+                    } else {
+                        ipoc = Convert.ToInt64(_R.Ipoc);
+                        if (ipoc - prevIpoc != 12 && ipoc != prevIpoc) {
+                            Console.WriteLine($"Ipoc Error");
+                        }
+                        prevIpoc = ipoc;
+                    }
+                    _R.RX = MyXML.GetValues(_R.Recive_data, "X");
+                    _R.RY = MyXML.GetValues(_R.Recive_data, "Y");
+                    _R.RZ = MyXML.GetValues(_R.Recive_data, "Z");
+                    _R.RA = MyXML.GetValues(_R.Recive_data, "A");
+                    _R.RB = MyXML.GetValues(_R.Recive_data, "B");
+                    _R.RC = MyXML.GetValues(_R.Recive_data, "C");
                 }
+                Thread.Sleep(10);
             }
-
-            if (Math.Abs(curZ) > step) {
-                if (curZ * -1 < 0) {
-                    curZ = step;
-                } else {
-                    curZ = -step;
-                }
-            }
-
-            Console.WriteLine($"Y = {curY}   Z = {curZ}");
+           
+            // Console.WriteLine($"Y = {curY}   Z = {curZ}");
         }
         int _INDX;
         string prevIpoc;
@@ -368,22 +373,22 @@ namespace TEST1 {
         public void ShowInfo() {
             while (true) {
                 Dispatcher.Invoke(() => {
-                    //double[] X;// = new double[1];
-                    //double[] Z;// = new double[1];                    
-                    //Laser.GetProfile(out X, out Z);
-                    //List<MyPoint> data = Calculate.ZeroZ(X, Z);
-                    //_V.SetData(data);
-                    //_V.ReDraw();
-                    //MyPoint p = new MyPoint() { X = 0, Z = 0 };
+                    double[] X;// = new double[1];
+                    double[] Z;// = new double[1];                    
+                    Laser.GetProfile(out X, out Z);
+                    List<MyPoint> data = Calculate.ZeroZ(X, Z);
+                    _V.SetData(data);
+                    _V.ReDraw();
+                    MyPoint p = new MyPoint() { X = 0, Z = 0 };
 
-                    //if (data.Count != 0) {
-                    //    p = Calculate.FindPointWithAngle(data, 10, 5);
-                    //    //MyPoint p2 = Calculate.FindPointWithAngleRight(data, 10, 5);
-                    //    //_V.DrawPoint(p2, new SolidColorBrush(Colors.Black));
-                    //}
-                    //_V.DrawPoint(p);
+                    if (data.Count != 0) {
+                        p = Calculate.FindPointWithAngle(data, 10, 5);
+                        //MyPoint p2 = Calculate.FindPointWithAngleRight(data, 10, 5);
+                        //_V.DrawPoint(p2, new SolidColorBrush(Colors.Black));
+                    }
+                    _V.DrawPoint(p);
 
-                    
+
                     tb_ReciveData.Text = _R.Recive_data;
                     tb_SendData.Text = _R.Send_data;
 
@@ -435,7 +440,7 @@ namespace TEST1 {
                     //_V.DrawPoint(p4, new SolidColorBrush(Colors.Pink));
                     #endregion
                 });
-                Thread.Sleep(12);
+                Thread.Sleep(100);
             }
         }
         //запись маршрута
@@ -563,14 +568,14 @@ namespace TEST1 {
                             };
                             yes = !yes;
                         } else {
-                            double yDif = 5;  // разница по игреку меду соседними точками при записи траэктории
+                            double yDif = 1.7;  // разница по игреку меду соседними точками при записи траэктории
                             if (Math.Abs(pTrans.Y - tempPoint.Y) < yDif && Math.Abs(pTrans.X - tempPoint.X) >= 1) {
                                 //Console.WriteLine($"{Math.Abs(pTrans.Y - CurData[CurData.Count - 1].Y)}");
                                 _Point temp = Calculate.CalcPoint(tempPoint, pTrans);
                                 CurData.Add(temp);
                                 Dispatcher.Invoke(() => map.LPoint(temp.X, temp.Y));
                                 tempPoint = pTrans;
-                                Console.WriteLine($"X = {temp.X}  Y = {temp.Y}  Z = {temp.Z}  ");
+                                //Console.WriteLine($"X = {temp.X}  Y = {temp.Y}  Z = {temp.Z}  ");
                             }
                         }
 
@@ -578,8 +583,9 @@ namespace TEST1 {
 
                         CurData.OrderBy(x => x.X);
                         if (CurData.Count > 2) {
-                            CurData = Calculate.UsredMap(CurData);
+                            //CurData = Calculate.UsredMap(CurData);                          
                         }
+                        _R.CurData = CurData;
                     }
                     #region
                     //double rx = MyXML.GetValues(_R.Recive_data, "X");

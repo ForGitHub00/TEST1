@@ -377,6 +377,24 @@ namespace TEST1 {
 
             return new _Point() { X = x, Y = yRes, Z = zRes };
         }
+        public static _Point CalcPoint(_Point p1, _Point p2, double difX) {
+            double x1 = Math.Min(p1.X, p2.X);
+            double x2 = Math.Max(p1.X, p2.X);
+            double x = difX;
+
+            double y1 = p1.X == x1 ? p1.Y : p2.Y;
+            double y2 = p1.X == x2 ? p1.Y : p2.Y;
+
+            double yRes = (((x - x1) * (y2 - y1)) / (x2 - x1)) + y1;
+
+            double z1 = p1.X == x1 ? p1.Z : p2.Z;
+            double z2 = p1.X == x2 ? p1.Z : p2.Z;
+
+            double zRes = (((x - x1) * (z2 - z1)) / (x2 - x1)) + z1;
+
+
+            return new _Point() { X = x, Y = yRes, Z = zRes };
+        }
 
         public static List<_Point> UsredMap(List<_Point> data) {
             List<_Point> res = new List<_Point>();

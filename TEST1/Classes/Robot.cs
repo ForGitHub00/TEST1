@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace TEST1 {
     public class Robot {
@@ -30,12 +31,16 @@ namespace TEST1 {
         public double RC { get; set; }
 
         public UdpClient serveur;
+        private MainWindow mW;
 
         public Robot() {
             Port = 6008;
         }
-        public Robot(int port) {
+        public Robot(int port, MainWindow m) {
             Port = port;
+            mW = m;
+            //map = ma;
+            CurData = new List<_Point>();
         }
         public void Start() {
             CurX = 0;
@@ -59,6 +64,36 @@ namespace TEST1 {
         }
 
 
+        public List<_Point> CurData { get; set; }
+        private void Cor(double xDef, string str) {
+            // Dispatcher.Invoke(() => tb_ReciveData.Text = _R.Recive_data);                                             
+            mW.Dispatcher.Invoke(() => mW.map.RPoint(RX, RY));
+
+            double rx = MyXML.GetValues(str, "X");
+            double ry = MyXML.GetValues(str, "Y");
+            double rz = MyXML.GetValues(str, "Z");
+
+            int index = 0;
+            if (CurData.Count > 0) {
+                while (index < CurData.Count && rx > CurData[index].X) {
+                    index++;
+                }
+                if (index < CurData.Count) {
+
+                _Point p = Calculate.CalcPoint(new _Point() { X = rx, Y = ry, Z = rz }, 
+                        new _Point() {X = CurData[index].X , Y = CurData[index].Y, Z = CurData[index].Z }, rx + xDef);
+                    //Console.WriteLine($"Y = {p.Y - RY}  Z = {p.Z - RZ}  ");
+                    if (p.Y == Double.NaN ) {
+                        Console.WriteLine($"Y = {p.Y - ry}  Z = {p.Z - rz}  ");
+                    }
+                    Console.WriteLine($"dx = {xDef}");
+                    CurY = (p.Y - ry);
+                    CurZ = (p.Z - rz);
+                }
+            }
+        }
+
+
         private void anyfunction() {
             // starting communication by separate process
             System.Threading.Thread secondThread;
@@ -74,56 +109,92 @@ namespace TEST1 {
 
             serveur = new UdpClient(Port);
 
+            double prevX = 0;
+            double x = 0;
+            //double prevY = 0;
+            //double y = 0;
+            //double prevZ = 0;
+            //double z = 0;
+            //long prevIpoc = 0;
+            //long ipoc;
+            //List<double> mas = new List<double>();
+
+
             try {
                 while (true) {
                     IPEndPoint client = null;
-                    //On ecoute jusqu'a recevoir un message.
                     byte[] data = serveur.Receive(ref client);
                     //Console.WriteLine("Donnees recues en provenance de {0}:{1}.", client.Address, client.Port);
-
-                    //Decryptage et affichage du message.
                     string message = Encoding.ASCII.GetString(data);
-
-                    // wait for data and receive bytes
-                    //Console.Clear();
-                    //Console.WriteLine(message);
-
-                    // convert bytes to string
                     string strReceive = message;
                     Recive_data = message;
 
 
+                  
 
-                    // take a look to the end of data
+
+                    #region
+                    //вывод скорости по X
+                    //if (prevX == 0) {
+                    //    prevX = MyXML.GetValues(strReceive, "X");
+                    //    prevY = MyXML.GetValues(strReceive, "Y");
+                    //    prevZ = MyXML.GetValues(strReceive, "Z");
+                    //} else {
+                    //    x = MyXML.GetValues(strReceive, "X");
+                    //    y = MyXML.GetValues(strReceive, "Y");
+                    //    z = MyXML.GetValues(strReceive, "Z");
+                    //    //Console.Clear();
+                    //    //double speedX = ((x - prevX) / 1000) / 0.012;
+                    //    //double speedY = ((y - prevY) / 1000) / 0.012;
+                    //    //double speedZ = ((z - prevZ) / 1000) / 0.012;
+                    //    //Console.WriteLine($"Speed = {speedX + speedY + speedZ} m/s");
+
+
+                    //    double speed = Math.Sqrt((x - prevX) * (x - prevX) + (y - prevY) * (y - prevY) + (z - prevZ) * (z - prevZ)) / 0.012;
+                    //    // Console.WriteLine($"Speed = {speed / 1000} m/s");
+                    //    mas.Add(speed / 1000);
+                    //    Console.WriteLine($"Speed = {mas.Average()} m/s");
+                    //    prevX = x;
+                    //    prevY = y;
+                    //    prevZ = z;
+                    //}
+
+                    //if (prevIpoc == 0) {
+                    //    prevIpoc = Convert.ToInt64(Ipoc);
+                    //} else {
+                    //    ipoc = Convert.ToInt64(Ipoc);
+                    //    if (ipoc - prevIpoc != 12) {
+                    //        Console.WriteLine($"Ipoc Error");
+                    //    }
+                    //    prevIpoc = ipoc;
+                    //}
+                    #endregion
+
                     if ((strReceive.LastIndexOf("</Rob>")) == -1) {
                         continue;
                     } else {
 
                         string strSend;
-                        // mirror the IPO counter you received yet                        
                         strSend = SendXML.InnerXml;
                         strSend = mirrorIPOC(strReceive, strSend);
 
-                        if (isCur || !isCur) {
-                            strSend = SetCur(strSend);
-                            _Point p = new _Point() {
-                                X = CurX,
-                                Y = CurY,
-                                Z = CurZ
-                            };
-                            Currection.WriteToFile("ipoc.txt", p, Ipoc);
-                            CurX = 0;
-                            CurY = 0;
-                            CurZ = 0;
-                            CurA = 0;
-                            CurB = 0;
-                            CurC = 0;
-                            isCur = false;
-                        }
-                        
-
-
-
+                        #region
+                        //if (isCur || !isCur) {
+                        //    strSend = SetCur(strSend);
+                        //    _Point p = new _Point() {
+                        //        X = CurX,
+                        //        Y = CurY,
+                        //        Z = CurZ
+                        //    };
+                        //    Currection.WriteToFile("ipoc.txt", p, Ipoc);
+                        //    CurX = 0;
+                        //    CurY = 0;
+                        //    CurZ = 0;
+                        //    CurA = 0;
+                        //    CurB = 0;
+                        //    CurC = 0;
+                        //    isCur = false;
+                        //}
 
                         //if (isCur) {
                         //    CurX = MyXML.GetValues(strReceive, "X");
@@ -137,7 +208,6 @@ namespace TEST1 {
                         //} 
 
 
-                        #region
                         /*
                         CurX = RX;
                         CurY = RY;
@@ -157,10 +227,26 @@ namespace TEST1 {
                         #endregion
 
 
+                        CurX = 0;
+                        CurY = 0;
+                        CurZ = 0;
+                        CurA = 0;
+                        CurB = 0;
+                        CurC = 0;
+
+                        if (prevX == 0) {
+                            prevX = MyXML.GetValues(strReceive, "X");
+                        } else {
+                            x = MyXML.GetValues(strReceive, "X");
+                            if (x - prevX != 0) {
+                                Cor(x - prevX, strReceive);
+                            }
+                            prevX = x;
+                        }
+                        strSend = SetCur(strSend);
 
                         Send_data = strSend;
 
-                        //send data as requested 
                         byte[] msg = System.Text.Encoding.ASCII.GetBytes(strSend);
                         serveur.Send(msg, msg.Length, client);
                     }
@@ -171,11 +257,7 @@ namespace TEST1 {
             }
         }
 
-        // send immediately incoming IPO counter to have a timestamp
         private string mirrorIPOC(string receive, string send) {
-
-
-
 
             //CurX = MyXML.GetValues(receive, "X");
             //CurY = MyXML.GetValues(receive, "Y");
