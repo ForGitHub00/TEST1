@@ -32,6 +32,21 @@ namespace TEST1 {
             }
         }
 
+        public static void WriteToFile(string path, double[] mas) {
+            try {
+                using (StreamWriter sw = new StreamWriter(path, true, System.Text.Encoding.Default)) {
+                    //sw.WriteLine($"{ipoc}|{p.X}|{p.Y}|{p.Z}");
+                    foreach (var item in mas) {
+                        sw.Write($"{item}|");
+                    }
+                    sw.WriteLine("");
+                }
+
+            } catch (Exception e) {
+                Console.WriteLine(e.Message);
+            }
+        }
+
         public static List<_Point> ReadFromFile(string path) {
             string[] readText = File.ReadAllLines(path);
             List<_Point> res = new List<_Point>();

@@ -27,8 +27,8 @@ namespace TEST1 {
                 Width = 3,
                 Fill = new SolidColorBrush(Colors.Red)
             };
-            Canvas.SetTop(el, 300 + y);
-            Canvas.SetLeft(el, x - 700);
+            Canvas.SetTop(el, y + 150);
+            Canvas.SetLeft(el, x);
             cnv.Children.Add(el);
         }
 
@@ -38,8 +38,8 @@ namespace TEST1 {
                 Width = 3,
                 Fill = new SolidColorBrush(Colors.DarkBlue)
             };
-            Canvas.SetTop(el, 300 + y);
-            Canvas.SetLeft(el, x - 700);
+            Canvas.SetTop(el,y + 150);
+            Canvas.SetLeft(el, x);
             cnv.Children.Add(el);
         }
 

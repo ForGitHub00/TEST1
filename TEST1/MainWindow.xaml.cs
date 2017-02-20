@@ -399,6 +399,11 @@ namespace TEST1 {
                         _R.RA = MyXML.GetValues(_R.Recive_data, "A");
                         _R.RB = MyXML.GetValues(_R.Recive_data, "B");
                         _R.RC = MyXML.GetValues(_R.Recive_data, "C");
+
+                        if (MyXML.GetValuesPA(_R.Recive_data, "x") - MyXML.GetValues(_R.Recive_data, "X") >= 0.1) {
+                            Console.WriteLine($"{MyXML.GetValuesPA(_R.Recive_data, "x") - MyXML.GetValues(_R.Recive_data, "X")}");
+                        }
+                        
                     }
 
 
@@ -520,7 +525,7 @@ namespace TEST1 {
 
                 if (_R.Recive_data != "" && _R.Recive_data != null) {
 
-                    // Dispatcher.Invoke(() => tb_ReciveData.Text = _R.Recive_data);
+                     Dispatcher.Invoke(() => tb_ReciveData.Text = _R.Recive_data);
 
 
                     MyPoint p = new MyPoint() { X = 0, Z = 0 };
@@ -530,12 +535,20 @@ namespace TEST1 {
                     _R.RX = MyXML.GetValues(_R.Recive_data, "X");
                     _R.RY = MyXML.GetValues(_R.Recive_data, "Y");
                     _R.RZ = MyXML.GetValues(_R.Recive_data, "Z");
+
+                    //_R.RX = MyXML.GetValuesPA(_R.Recive_data, "x");
+                    //_R.RY = MyXML.GetValuesPA(_R.Recive_data, "y");
+                    //_R.RZ = MyXML.GetValuesPA(_R.Recive_data, "z");
+
+                    
+
+
                     _R.RA = MyXML.GetValues(_R.Recive_data, "A");
                     _R.RB = MyXML.GetValues(_R.Recive_data, "B");
                     _R.RC = MyXML.GetValues(_R.Recive_data, "C");
 
 
-                    _Point pTrans = Transform.Trans(_R.RX, _R.RY, _R.RZ, _R.RA, _R.RB, _R.RC, 76.97, p.X + 7.51, p.Z - 350 - 5.87);
+                    _Point pTrans = Transform.Trans(_R.RX, _R.RY, _R.RZ, _R.RA, _R.RB, _R.RC, 87.74, p.X + 32.83, p.Z - 340 + 29.90);
 
                     //if (pTrans.X != 0) {
                     //    if (CurData.Count == 0) {
@@ -568,7 +581,7 @@ namespace TEST1 {
                             };
                             yes = !yes;
                         } else {
-                            double yDif = 1.7;  // разница по игреку меду соседними точками при записи траэктории
+                            double yDif = 0.5;  // разница по игреку меду соседними точками при записи траэктории
                             if (Math.Abs(pTrans.Y - tempPoint.Y) < yDif && Math.Abs(pTrans.X - tempPoint.X) >= 1) {
                                 //Console.WriteLine($"{Math.Abs(pTrans.Y - CurData[CurData.Count - 1].Y)}");
                                 _Point temp = Calculate.CalcPoint(tempPoint, pTrans);

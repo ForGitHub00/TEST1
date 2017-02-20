@@ -70,5 +70,16 @@ namespace TEST1 {
 
 
         }
+
+        public static double GetValuesPA(string strXML, string name) {
+            XDocument xdoc = XDocument.Parse(strXML);
+            foreach (XElement phoneElement in xdoc.Element("Rob").Elements("PosA")) {
+                XAttribute nameAttribute = phoneElement.Attribute(name);
+                if (nameAttribute != null) {
+                    return Convert.ToDouble(nameAttribute.Value.Replace('.', ',')) / 1000;
+                }
+            }
+            return 0;
+        }
     } 
 }

@@ -67,11 +67,19 @@ namespace TEST1 {
         public List<_Point> CurData { get; set; }
         private void Cor(double xDef, string str) {
             // Dispatcher.Invoke(() => tb_ReciveData.Text = _R.Recive_data);                                             
-            mW.Dispatcher.Invoke(() => mW.map.RPoint(RX, RY));
+
+
+            //double rx = MyXML.GetValuesPA(str, "x");
+            //double ry = MyXML.GetValuesPA(str, "y");
+            //double rz = MyXML.GetValuesPA(str, "z");
+
 
             double rx = MyXML.GetValues(str, "X");
             double ry = MyXML.GetValues(str, "Y");
             double rz = MyXML.GetValues(str, "Z");
+
+
+            mW.Dispatcher.Invoke(() => mW.map.RPoint(rx, ry));
 
             int index = 0;
             if (CurData.Count > 0) {
@@ -84,11 +92,20 @@ namespace TEST1 {
                         new _Point() {X = CurData[index].X , Y = CurData[index].Y, Z = CurData[index].Z }, rx + xDef);
                     //Console.WriteLine($"Y = {p.Y - RY}  Z = {p.Z - RZ}  ");
                     if (p.Y == Double.NaN ) {
-                        Console.WriteLine($"Y = {p.Y - ry}  Z = {p.Z - rz}  ");
+                        //Console.WriteLine($"Y = {p.Y - ry}  Z = {p.Z - rz}  ");
                     }
-                    Console.WriteLine($"dx = {xDef}");
-                    CurY = (p.Y - ry);
-                    CurZ = (p.Z - rz);
+                    //Console.WriteLine($"dx = {xDef}");
+
+
+                    CurY = (p.Y - ry) / 1;
+                    CurZ = (p.Z - rz) / 1;
+
+                    //CurY = (CurData[index].Y - ry) / 100;
+                    //CurZ = (CurData[index].Z - rz) / 100;
+
+                    if (CurY > 1) {
+                        Console.WriteLine($"dx = {xDef}  curY = {CurY}  RY = {ry}   curDataY = { CurData[index].Y}  pY  = {p.Y}");
+                    }
                 }
             }
         }
@@ -227,6 +244,8 @@ namespace TEST1 {
                         #endregion
 
 
+                        //Currection.WriteToFile("PosAct.txt", new double[] { MyXML.GetValues(strReceive, "X"), MyXML.GetValuesPA(strReceive, "x") / 1000});
+
                         CurX = 0;
                         CurY = 0;
                         CurZ = 0;
@@ -236,13 +255,22 @@ namespace TEST1 {
 
                         if (prevX == 0) {
                             prevX = MyXML.GetValues(strReceive, "X");
-                        } else {
+                            //prevX = MyXML.GetValues(strReceive, "X");
+                        } else { 
                             x = MyXML.GetValues(strReceive, "X");
-                            if (x - prevX != 0) {
+                            //x = MyXML.GetValues(strReceive, "X");
+                            if (x - prevX > 0) {
                                 Cor(x - prevX, strReceive);
+                                //if (x - prevX < 0.01) {
+                                //    Console.WriteLine($"CUR!  {x - prevX}");
+                                //}
                             }
+
+
                             prevX = x;
                         }
+
+
                         strSend = SetCur(strSend);
 
                         Send_data = strSend;
