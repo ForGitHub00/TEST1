@@ -43,6 +43,27 @@ namespace TEST1 {
             cnv.Children.Add(el);
         }
 
+
+        public void DrawLine(double x1, double y1, double x2, double y2, SolidColorBrush col) {
+            
+            for (int i = 0; i < cnv.Children.Count; i++) {
+                if (cnv.Children[i].GetType() == typeof(Line)) {
+                    cnv.Children.Remove(cnv.Children[i]);
+                }
+            }
+
+            Line line = new Line() {
+                Stroke = col,
+                Fill = col,
+                X1 = x1,
+                X2 = x2,
+                Y1 = y1,
+                Y2 = y2
+            };
+            cnv.Children.Add(line);
+        }
+
+
         private void cnv_MouseRightButtonDown(object sender, MouseButtonEventArgs e) {
             cnv.Children.Clear();
         }

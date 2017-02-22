@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -77,6 +78,7 @@ namespace TEST1 {
             double rx = MyXML.GetValues(str, "X");
             double ry = MyXML.GetValues(str, "Y");
             double rz = MyXML.GetValues(str, "Z");
+            double ra = MyXML.GetValues(str, "A");
 
 
             mW.Dispatcher.Invoke(() => mW.map.RPoint(rx, ry));
@@ -97,11 +99,38 @@ namespace TEST1 {
                     //Console.WriteLine($"dx = {xDef}");
 
 
-                    CurY = (p.Y - ry) / 1;
-                    CurZ = (p.Z - rz) / 1;
+                    //CurY = (p.Y - ry) / 1;
+                    //CurZ = (p.Z - rz) / 1;
+                    CurY = (CurData[index].Y - ry) / 10;
+                    CurZ = (CurData[index].Z - rz) / 10;
 
-                    //CurY = (CurData[index].Y - ry) / 100;
-                    //CurZ = (CurData[index].Z - rz) / 100;
+
+
+                    double angleA = Math.Atan2(CurData[CurData.Count - 1].Y - ry, CurData[CurData.Count - 1].Z - rx);
+
+                    if (angleA == Double.NaN) {
+                        Console.WriteLine($"AngleA = {angleA}");
+                    } else if (angleA == Double.NegativeInfinity) {
+                        Console.WriteLine($"AngleA  negati = {angleA}");
+                    }
+
+
+                    angleA = (angleA - ra) / 100;
+                    if (Math.Abs(angleA) < 1) {
+                        //CurA = angleA /10;
+                    }
+
+
+
+
+                    CurA = (-19 - ra) / 100;
+                    //Console.WriteLine($"AngleA = {angleA}  ra = {ra}  ");
+                    Debug.WriteLine($"AngleA = {angleA}  ra = {ra}  CurA = {CurA}");
+
+
+                    //CurC = -0.005;
+
+
 
                     if (CurY > 1) {
                         Console.WriteLine($"dx = {xDef}  curY = {CurY}  RY = {ry}   curDataY = { CurData[index].Y}  pY  = {p.Y}");
@@ -109,15 +138,12 @@ namespace TEST1 {
                 }
             }
         }
-
-
         private void anyfunction() {
             // starting communication by separate process
             System.Threading.Thread secondThread;
             secondThread = new System.Threading.Thread(new System.Threading.ThreadStart(StartListening));
             secondThread.Start();
         }
-
         // second thread
         private void StartListening() {
             System.Xml.XmlDocument SendXML = new System.Xml.XmlDocument();  // XmlDocument pattern
@@ -135,6 +161,8 @@ namespace TEST1 {
             //long prevIpoc = 0;
             //long ipoc;
             //List<double> mas = new List<double>();
+            Random rnd = new Random();
+
 
 
             try {
@@ -276,7 +304,7 @@ namespace TEST1 {
                         Send_data = strSend;
 
                         byte[] msg = System.Text.Encoding.ASCII.GetBytes(strSend);
-                        serveur.Send(msg, msg.Length, client);
+                        //serveur.Send(msg, msg.Length, client);
                     }
                     strReceive = null;
                 }
@@ -284,7 +312,6 @@ namespace TEST1 {
                 Console.WriteLine("Возникло исключение: " + ex.ToString() + "\n  " + ex.Message);
             }
         }
-
         private string mirrorIPOC(string receive, string send) {
 
             //CurX = MyXML.GetValues(receive, "X");
@@ -314,7 +341,6 @@ namespace TEST1 {
             // send back the string
             return send;
         }
-
         private string SetCur(string send) {
             int startdummy = send.IndexOf("X=") + 3;
             int stopdummy = send.IndexOf("X=") + 9;

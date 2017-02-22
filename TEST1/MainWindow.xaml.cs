@@ -22,20 +22,38 @@ namespace TEST1 {
     public partial class MainWindow : Window {
         public MainWindow() {
             InitializeComponent();
-            main();
+
             //Testinng();
 
+
+            //map.DrawLine(15, 15, 150, 150);
+            //map.DrawLine(30, 15, 300, 150);
+            //foo();
+
+
+            main();
             map.Show();
-          
             data = new List<MyPoint>();
         }
+
+
         public Viewer _V;
         public Robot _R;
         List<_Point> CurData;
         List<MyPoint> data;
-
         public MapWindow map = new MapWindow();
+        int _INDX;
+        string prevIpoc;
 
+
+        public void foo() {
+            int a = 5;
+            Console.WriteLine($"a = {++a}");
+
+            a = a / 17;
+
+
+        }
         public void main() {
             _V = new Viewer(this);
             Laser.Init();
@@ -46,6 +64,9 @@ namespace TEST1 {
 
 
             _R = new Robot(6008, this);
+
+
+
             map.Show();
              _R.Start();
             _INDX = -1;
@@ -86,8 +107,6 @@ namespace TEST1 {
             // MessageBox.Show(a.ToString());
             #endregion
         }
-
-
         public void DoCur() {
             while (true) {                         
                 if (_R.Recive_data != "" && _R.Recive_data != null) {
@@ -136,7 +155,6 @@ namespace TEST1 {
             }
            
         }
-
         public void DoCur2() {
             while (true) {
                 if (_R.Recive_data != "" && _R.Recive_data != null) {
@@ -190,7 +208,6 @@ namespace TEST1 {
             }
 
         }
-
         public void DoCur3() {
             int milimeter = 0;
             int prevMil = 0;
@@ -268,7 +285,6 @@ namespace TEST1 {
             }
 
         }
-
         public void DoCur4() {
             int milimeter = 0;
             int prevMil = 0;
@@ -329,8 +345,6 @@ namespace TEST1 {
             }
 
         }
-
-
         public void Testinng() {
             double prevX = 0;
             double x = 0;
@@ -343,32 +357,36 @@ namespace TEST1 {
 
 
             while (true) {
-                if (_R.Recive_data != "" && _R.Recive_data != null) {
-                    if (prevIpoc == 0) {
-                        prevIpoc = Convert.ToInt64(_R.Ipoc);
-                    } else {
-                        ipoc = Convert.ToInt64(_R.Ipoc);
-                        if (ipoc - prevIpoc != 12 && ipoc != prevIpoc) {
-                            Console.WriteLine($"Ipoc Error");
-                        }
-                        prevIpoc = ipoc;
-                    }
-                    _R.RX = MyXML.GetValues(_R.Recive_data, "X");
-                    _R.RY = MyXML.GetValues(_R.Recive_data, "Y");
-                    _R.RZ = MyXML.GetValues(_R.Recive_data, "Z");
-                    _R.RA = MyXML.GetValues(_R.Recive_data, "A");
-                    _R.RB = MyXML.GetValues(_R.Recive_data, "B");
-                    _R.RC = MyXML.GetValues(_R.Recive_data, "C");
+                if (_R.Recive_data != "" && _R.Recive_data != null) {                 
+                    //_R.RX = MyXML.GetValues(_R.Recive_data, "X");
+                    //_R.RY = MyXML.GetValues(_R.Recive_data, "Y");
+                    //_R.RZ = MyXML.GetValues(_R.Recive_data, "Z");
+                    //_R.RA = MyXML.GetValues(_R.Recive_data, "A");
+                    //_R.RB = MyXML.GetValues(_R.Recive_data, "B");
+                    //_R.RC = MyXML.GetValues(_R.Recive_data, "C");
+
+                    //map.RPoint(MyXML.GetValues(_R.Recive_data, "X"), MyXML.GetValues(_R.Recive_data, "Y"));
+
+                    double x1 = MyXML.GetValuesPA(_R.Recive_data, "x");
+                    double y1 = MyXML.GetValuesPA(_R.Recive_data, "y");
+                    double x2 = MyXML.GetValuesPA(_R.Recive_data, "A") * 1000;
+                    double y2 = MyXML.GetValuesPA(_R.Recive_data, "B") * 1000;
+
+
+                    Dispatcher.Invoke(() => {
+                        map.DrawLine(x1 + 50, y1 + 50, x2 + 50, y2 +50, new SolidColorBrush(Colors.Green));
+                        tb_ReciveData.Text = _R.Recive_data;
+                        tb_SendData.Text = _R.Send_data;
+                    });
+                   
+
                 }
-                Thread.Sleep(10);
+                Thread.Sleep(50);
             }
            
             // Console.WriteLine($"Y = {curY}   Z = {curZ}");
         }
-        int _INDX;
-        string prevIpoc;
         
-
         //вывод данных на экран
         public void ShowInfo() {
             while (true) {
@@ -504,8 +522,7 @@ namespace TEST1 {
                 //Console.WriteLine(sw.ElapsedMilliseconds);
             }
         }
-        //относительная
-       
+        //относительная       
         public void ShowInfo3() {
 
             _Point tempPoint = new _Point();
@@ -767,8 +784,6 @@ namespace TEST1 {
 
             #endregion
         }
-
-
         public void ShowInfo3_2() {
             while (true) {
 
@@ -810,7 +825,6 @@ namespace TEST1 {
                 }
             }
         }        
-
 
         private void bt_start_listen_Click(object sender, RoutedEventArgs e) {
             _R.Start();
